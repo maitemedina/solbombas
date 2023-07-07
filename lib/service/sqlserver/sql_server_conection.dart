@@ -15,7 +15,7 @@ class SQLServerConnection{
     // );
     print("TESTES 2");
     var conn = await SqlConn.connect(ip: "192.168.1.1", port: "1433", databaseName: "SATLANTICO", username: "dcosta", password: "sola8411");
-    print("TESTES 3");
+    //print("TESTES 3");
     // Faça operações no banco de dados aqui
 
     final results = await conn.query('SELECT * FROM pe;');
