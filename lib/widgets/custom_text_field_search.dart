@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:solbombas/constant/color.dart';
+import 'package:solbombas/constant/controller.dart';
 import 'package:solbombas/constant/strings.dart';
 import 'package:solbombas/constant/style.dart';
 
@@ -28,7 +29,9 @@ class CustomTextFieldSearch extends StatelessWidget {
         fillColor: Theme.of(context).primaryColorDark,
         hintText: null == initialValue ? Strings.defaultHintLabel : initialValue!,
         hintStyle: Styles.textRegular,
-      ),
+      ),onChanged: (value){
+        matriculaController.filterveiculos(value);
+    },
       controller: textController,
     );
   }

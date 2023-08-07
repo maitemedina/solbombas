@@ -33,15 +33,14 @@ class LoginPage extends StatelessWidget {
                   Obx(() =>
                         Text('${loginController.result} '),
                   ),
-                  CustomTextField(label: "", initialValue: Strings.nameLabel),
+                  CustomTextField(label: "", initialValue: Strings.nameLabel, textController: loginController.userTextController),
                   const SizedBox(height: 15),
-                  CustomPasswordTextField(hintText: Strings.passwordLabel, requiredLabel: Strings.enterPasswordLabel,),
+                  CustomPasswordTextField(hintText: Strings.passwordLabel, requiredLabel: Strings.enterPasswordLabel,textController: loginController.passTextController),
                 ],
               )),
               const SizedBox(height: 15),
-              ButtonUI(label: Strings.enterLabel, action: () {
-                SQLServerConnection().connectToSqlServer();
-                //Get.to(const BombaPage());
+              ButtonUI(label: Strings.enterLabel, action: () async{
+                await loginController.login(context: context);
                 },forceExtended: true)
             ],
           ),

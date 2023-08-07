@@ -20,6 +20,7 @@ class _CustomPasswordTextFieldState extends State<CustomPasswordTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      keyboardType: TextInputType.number,
       obscureText: statePassword,
       decoration: InputDecoration(
         border: OutlineInputBorder(

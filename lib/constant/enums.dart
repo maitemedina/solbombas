@@ -3,3 +3,9 @@ enum ButtonType {
   secondary,
   danger,
 }
+
+enum ErrorRequest {
+  internet,
+  timeOut,
+  serverError,
+}

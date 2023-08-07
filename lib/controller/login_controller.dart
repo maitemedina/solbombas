@@ -1,10 +1,20 @@
+
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
+import 'package:solbombas/constant/api_path.dart';
+import 'package:solbombas/model/userModel.dart';
+import 'package:solbombas/pages/bomba/bomba_page.dart';
+import 'package:solbombas/service/Http/service_data.dart';
 
 class LoginController extends GetxController {
   static LoginController instance = Get.find();
 
   RxString result = "".obs;
+  List<UserModel> user = <UserModel>[].obs;
+
+  final userTextController = TextEditingController();
+  final passTextController = TextEditingController();
 
   @override
   void onInit() {
@@ -14,7 +24,8 @@ class LoginController extends GetxController {
 
   void _tagRead() {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
-      var num = tag.data["mifareclassic"]["identifier"].map((e) => e.toRadixString(16).padLeft(2, '0')).join('');
+      var num = tag.data["mifareclassic"]["identifier"].map((e) =>
+          e.toRadixString(16).padLeft(2, '0')).join('');
       //var num = "ec328202";
 
       var numAgrupado = [];
@@ -27,7 +38,8 @@ class LoginController extends GetxController {
         }
       }
 
-      var nu = numAgrupado[3]+numAgrupado[2]+numAgrupado[1]+numAgrupado[0];
+      var nu = numAgrupado[3] + numAgrupado[2] + numAgrupado[1] +
+          numAgrupado[0];
 
       int decimal = int.parse(nu, radix: 16);
       var t = decimal.toString();
@@ -41,6 +53,39 @@ class LoginController extends GetxController {
       result.value = t;
 
       NfcManager.instance.stopSession();
+      await login();
     });
+  }
+
+  Future login({context}) async {
+    var num = '3222140871';
+
+    if (num.isNull || num.isEmpty) {
+      num = "0";
+    }
+    print("tes: "+ userTextController.text.trim());
+    var name = userTextController.text.trim();
+    var code = passTextController.text.trim();
+
+    var body = [{
+      'usercode': name,
+      'u_pin': code,
+    }];
+
+    var data = await ServiceData.postService(body, "auth/$num", context);
+
+    print("LOGIN");
+    print(data);
+
+    if (data != null) {
+      user = data.map<UserModel>((json) => UserModel.fromJson(json)).toList();
+
+      Get.offAll(const BombaPage());
+    }
+    else {
+      return Get.snackbar("SolAtlantico", "Utilizador não encontrado");
+    }
+
+    print(user.first.username);
   }
 }
