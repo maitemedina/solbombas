@@ -64,7 +64,7 @@ class OpcionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: ()async{
-                    await matriculaController.getVeiculoList(context: context);
+                    await matriculaController.getVeiculoList();
                     Get.to(MatriculaPage(bomba:bomba));
                   },
                 ),
@@ -92,7 +92,7 @@ class OpcionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
-                    bombaPopup(title: bomba, num: "0", context);
+                    bombaPopup(title: bomba, num: "0");
                   },
                 ),
               ),

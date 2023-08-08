@@ -14,6 +14,7 @@ class MatriculaController extends GetxController {
   List<MotoristaModel> motorista = <MotoristaModel>[].obs;
 
   RxString result = "".obs;
+  RxString condutor = "".obs;
 
   final RxList<VeiculosModel> filteredVeiculoList = RxList<VeiculosModel>();
 
@@ -28,9 +29,9 @@ class MatriculaController extends GetxController {
   //   filteredVeiculoList.addAll(veiculosList);
   // }
 
-  Future getVeiculoList({context}) async {
+  Future getVeiculoList() async {
 
-    var data = await ServiceData.getService("veiculos", context);
+    var data = await ServiceData.getService("veiculos");
 
     print("Lista veiculos");
     print(data);
@@ -93,23 +94,25 @@ class MatriculaController extends GetxController {
 
 
       result.value = t;
-
-      NfcManager.instance.stopSession();
       await getMotorista(num: result.value);
+      NfcManager.instance.stopSession();
+
     });
   }
 
-  Future getMotorista({context, num}) async {
+  Future getMotorista({ num}) async {
 
-    var id = '2333553860';
+   // var id = '2333553860';
+    var id = num;
 
-    var data = await ServiceData.getService("motorista/$id", context);
+    var data = await ServiceData.getService("motorista/$id");
 
     print("motorista");
     print(data);
 
     if (data != null) {
       motorista = data.map<MotoristaModel>((json) => MotoristaModel.fromJson(json)).toList();
+      condutor.value = motorista.first.cmdesc!;
     }
     else {
       return Get.snackbar("SolAtlantico", "Motorista não encontrado");

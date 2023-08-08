@@ -40,7 +40,7 @@ class LoginPage extends StatelessWidget {
               )),
               const SizedBox(height: 15),
               ButtonUI(label: Strings.enterLabel, action: () async{
-                await loginController.login(context: context);
+                await loginController.login();
                 },forceExtended: true)
             ],
           ),

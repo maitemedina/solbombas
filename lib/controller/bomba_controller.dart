@@ -4,12 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solbombas/constant/api_path.dart';
 import 'package:solbombas/constant/controller.dart';
+import 'package:solbombas/main.dart';
 import 'package:solbombas/model/bombaModel.dart';
 import 'package:solbombas/pages/bomba/bomba_page.dart';
 import 'package:solbombas/pages/bomba/page/opcion_page.dart';
 import 'package:solbombas/pages/bomba/widgets/bomba_popup.dart';
+import 'package:solbombas/pages/login/login_page.dart';
 import 'package:solbombas/service/Http/service_data.dart';
 
 import '../model/listBombasModel.dart';
@@ -24,6 +27,27 @@ class BombaController extends GetxController {
 
   final valorBombaTextController = TextEditingController();
 
+  final _isLoggedIn = false.obs;
+  final _numBomba = "".obs;
+
+  bool get isLoggedIn => _isLoggedIn.value;
+  String get numBomba => _numBomba.value;
+
+  Future<void> checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _isLoggedIn.value = prefs.getBool('isLoggedIn') ?? false;
+    _numBomba.value = prefs.getString('numBomba') ?? '';
+
+    if (!isLoggedIn) {
+      // Se não estiver logado, redirecione para a página de login.
+      Get.offAll(BombaPage());
+    } else {
+      // Se já estiver logado, redirecione para a página principal.
+      getBomba( nbomba: bombaController.numBomba);
+      Get.offAll(OpcionPage(bomba: "Bomba ${bombaController.numBomba ?? ''}"));
+    }
+  }
+
   @override
   void onInit() async{
 
@@ -33,9 +57,9 @@ class BombaController extends GetxController {
 
 
 
-  Future getBombaList({context}) async {
+  Future getBombaList() async {
 //lista de bombas existentes
-    var data = await ServiceData.getService("bombasAll", context);
+    var data = await ServiceData.getService("bombasAll");
 
     print("Lista Bombas");
     print(data);
@@ -50,16 +74,27 @@ class BombaController extends GetxController {
     print(bombasList.first.username);
   }
 
-  Future getBomba({required BuildContext context,nbomba, num}) async {
+  Future getBomba({nbomba}) async {
   //trazer dados de uma bomba em expecifico
-    var data = await ServiceData.getService("bombascomb/$nbomba", context);
+    var data = await ServiceData.getService("bombascomb/$nbomba");
 
     print("Bombas");
     print(data);
 
     if (data != null) {
       bomba = data.map<BombaModel>((json) => BombaModel.fromJson(json)).toList();
-      bombaPopup(title: "Bomba $nbomba", num: "1", context);
+
+      if (!isLoggedIn) {
+        bombaPopup(title: "Bomba $nbomba", num: "1");
+      }
+
+
+      _isLoggedIn.value = true;
+      _numBomba.value = numBomba;
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.setBool('isLoggedIn', true);
+      prefs.setString('numBomba', bomba.first.bomba??'');
     }
     else {
       return Get.snackbar("SolAtlantico", "Dados da bomba não encontrado");
@@ -92,7 +127,7 @@ class BombaController extends GetxController {
 
   }
 
-  Future putUpdateBombas({context}) async {
+  Future putUpdateBombas() async {
 //atualizar o login na bomba de combustivel(livre)
     var user = "";
     var iniciais = loginController.user.first.iniciais.toString();
@@ -115,7 +150,7 @@ class BombaController extends GetxController {
 
   }
 
-  Future postBombasComb(String num, String title, {required BuildContext context}) async {
+  Future postBombasComb(String num, String title) async {
 //atualizar se o valor da bomba de combustivel
 
     var now =  DateTime.now();
@@ -159,11 +194,72 @@ class BombaController extends GetxController {
     print(data);
 
     if (data != null) {
-      num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll(const BombaPage());
+      num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll(LoginPage());
     }
     else {
       return Get.snackbar("SolAtlantico", "Erro");
     }
 
+  }
+
+  Future postCloseBombasComb(String num, String title) async {
+//atualizar se o valor que a bomba de combustivel foi fechada
+
+    var now =  DateTime.now();
+    var formatter =  DateFormat('yyyy-MM-dd');
+    var dh = DateTime(now.year, now.month, now.day, now.hour, now.minute);
+    String formattedTime = DateFormat.Hms().format(now);
+    String formattedDate = formatter.format(now);
+
+    var user = loginController.user.first.usercode.toString();
+    var iniciais = loginController.user.first.iniciais.toString();
+    var datahora = dh.toString();
+    var ndata = formattedDate.toString();
+    var hora = formattedTime.toString();
+    var contInicio = 0;
+    var contfim = valorBombaTextController.text;
+    var abastecido = 0;
+    var contint = 0;
+    var inactivo = 0;
+    var marcada = 0;
+    var bombac = bomba.first.bomba;
+
+
+
+    var body = [{"username":user,
+      "ousrinis":iniciais,
+      "ousrdata":datahora,
+      "data":ndata,
+      "ousrhora":hora,
+      "contfim":contfim,
+      "continicio":contInicio,
+      "abastecido":abastecido,
+      "contint":contint,
+      "bomba": bombac,
+      "inactivo": inactivo,
+      "marcada": marcada}];
+
+
+    var data = await ServiceData.postCreate(body, "postbombacomb");
+
+    print("Update qtt na bombas no fecho");
+    print(data);
+
+    if (data != null) {
+      num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll( LoginPage());
+    }
+    else {
+      return Get.snackbar("SolAtlantico", "Erro");
+    }
+
+  }
+
+  void logout() async {
+    _isLoggedIn.value = false;
+    _numBomba.value = "";
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.remove('isLoggedIn');
+    prefs.remove('numBomba');
   }
 }

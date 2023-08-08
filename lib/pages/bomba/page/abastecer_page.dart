@@ -65,7 +65,7 @@ class AbastecerPage extends StatelessWidget {
                     Strings.driverLabel,
                     style: Styles.textBold,
                   ),
-                  Text(matriculaController.motorista.first.cmdesc??'', style: Styles.textRegular),
+                  Obx(()=> Text(matriculaController.condutor.toString(), style: Styles.textRegular)),
                 ],
               ),
               const SizedBox(height: 16),
@@ -81,10 +81,12 @@ class AbastecerPage extends StatelessWidget {
                 textController: abastecerController.qttController,
               ),
               const SizedBox(height: 16.0),
-              ButtonUI(label: Strings.saveLabel, action: () async{
-                await abastecerController.putUpdateBombas(veiculo:veiculo, bombaText: bomba);
-                abastecerController.qttController.clear();
-              }, forceExtended: true)
+              Obx(
+                  ()=> ButtonUI(label: Strings.saveLabel, action: () async{
+                  await abastecerController.putUpdateBombas(veiculo:veiculo, bombaText: bomba);
+                  abastecerController.qttController.clear();
+                }, forceExtended: true, disable: matriculaController.condutor.isEmpty?false:true),
+              )
             ],
           ),
         ),

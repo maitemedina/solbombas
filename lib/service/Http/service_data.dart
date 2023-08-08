@@ -31,7 +31,7 @@ class ServiceData{
     }
   }
 
-  static Future getService(url, context) async {
+  static Future getService(url) async {
     print(ApiPath.baseUrl + url);
     var response = await statusError(http.get(Uri.parse(ApiPath.baseUrl + url), headers: {
       // 'Authorization': 'Bearer ${globals.user.token}',
@@ -41,7 +41,7 @@ class ServiceData{
     }));
 print("serv");
     if (response.runtimeType == ErrorRequest) {
-      requestAlertError(context, response);
+      requestAlertError(response);
 
       return null;
     }
@@ -77,7 +77,7 @@ print("serv");
     }
   }
 
-  static Future postService(List<Map<String, dynamic>> body, url, context) async {
+  static Future postService(List<Map<String, dynamic>> body, url) async {
 
     print(json.encode(body));
     print(ApiPath.baseUrl + url);
@@ -91,7 +91,7 @@ print("serv");
     // Get.back();
     print("1");
     if (response.runtimeType == ErrorRequest) {
-      requestAlertError(context, response);
+      requestAlertError(response);
       return null;
      // return Get.snackbar("SolAtlantico", "server error");
     }
@@ -120,7 +120,7 @@ print("serv");
     return null;
   }
 
-  static requestAlertError(BuildContext context, ErrorRequest errorRequest) async {
+  static requestAlertError(ErrorRequest errorRequest) async {
     switch (errorRequest) {
       case ErrorRequest.timeOut:
         Get.snackbar("SolAtlantico", "The connection has timed out, Please try again!");

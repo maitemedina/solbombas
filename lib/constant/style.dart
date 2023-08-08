@@ -30,6 +30,13 @@ abstract class Styles {
       )
   );
 
+  static TextStyle heading5n = GoogleFonts.sourceSansPro(
+      textStyle: const TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.normal
+      )
+  );
+
   static TextStyle heading4 = GoogleFonts.sourceSansPro(
       textStyle: const TextStyle(
         fontSize: 26,

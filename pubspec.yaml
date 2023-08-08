@@ -38,6 +38,7 @@ dependencies:
   searchable_listview: ^2.4.0
   intl: ^0.18.1
   flutter_easyrefresh:
+  shared_preferences: ^2.2.0
 
 
   # The following adds the Cupertino Icons font to your application.

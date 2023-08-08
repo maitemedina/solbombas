@@ -29,14 +29,14 @@ class MatriculaCard extends StatelessWidget {
             Text(
               veiculo.matricula ??
                   '',
-              style: Styles.heading7,
+              style: Styles.heading5n,
             ),
           ],
         ),
       ),
       onTap: () async{
-
-        await matriculaController.getMotorista();
+        abastecerController.kmsController.text = veiculo.kmsatehoje!;
+         matriculaController.tagRead();
           Get.to(AbastecerPage(veiculo: veiculo,
               matricula: veiculo.matricula ??
                   '',

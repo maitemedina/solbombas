@@ -12,6 +12,7 @@ class ButtonUI extends StatelessWidget {
   final VoidCallback action;
   final bool forceExtended;
   final bool verticalLarge;
+  final bool disable;
 
   const ButtonUI({
     Key? key,
@@ -21,6 +22,7 @@ class ButtonUI extends StatelessWidget {
     this.buttonType = ButtonType.primary,
     this.forceExtended = false,
     this.verticalLarge = false,
+    this.disable = true,
   }) : super(key: key);
 
   @override
@@ -28,13 +30,13 @@ class ButtonUI extends StatelessWidget {
     if (buttonType == ButtonType.primary) {
       return !ResponsiveWidget.isSmallScreen(context) || forceExtended
           ? ElevatedButton(
-          onPressed: action,
+          onPressed: disable ? action : null,
           style: ElevatedButton.styleFrom(
               shadowColor: ColorPalette.blackGray,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
-              backgroundColor: Theme.of(context).primaryColor,
+              backgroundColor: disable ? Theme.of(context).primaryColor : ColorPalette.gray,
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 18.0),
               elevation: 8),
           child: Padding(

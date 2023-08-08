@@ -73,7 +73,7 @@ class BombaPage extends StatelessWidget {
                                     controller.abert.value = controller.bombasList[index].aberta.toString();
                                     if (controller.bombasList[index].aberta == "0"|| controller.bombasList[index].username == loginController.user.first.usercode) {
                                       await controller.putBombas(context: context,num: controller.bombasList[index].bomba.toString());
-                                      await controller.getBomba(nbomba: controller.bombasList[index].bomba.toString(), context: context, num:"1");
+                                      await controller.getBomba(nbomba: controller.bombasList[index].bomba.toString());
                                       //bombaPopup(title: "Bomba ${controller.bombasList[index].bomba}", num: "1", context);
                                     }else{
                                       Get.snackbar("SolAtlantico", "Essa bomba esta a ser utilizada por ${controller.bombasList[index].username}");

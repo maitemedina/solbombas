@@ -11,7 +11,7 @@ import 'package:solbombas/pages/bomba/bomba_page.dart';
 import 'package:solbombas/pages/bomba/page/opcion_page.dart';
 import 'package:solbombas/widgets/custom_text_field.dart';
 
-void bombaPopup( BuildContext context,  {required String title, required String num}){
+void bombaPopup( {required String title, required String num}){
   Get.defaultDialog(
       title: title, titleStyle: Styles.heading6.copyWith(color: ColorPalette.primary),
       content:  Padding(
@@ -32,8 +32,9 @@ void bombaPopup( BuildContext context,  {required String title, required String 
                     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                       child: Text(Strings.cancelLabel, style: Styles.leadN)),
                   onTap: ()async{
-                    await bombaController.putUpdateBombas(context: context);
-                    bombaController.valorBombaTextController.clear();
+                    if(num == "1") {
+                      await bombaController.putUpdateBombas();
+                    }
                     Get.back();
                   },
                 ),
@@ -42,9 +43,16 @@ void bombaPopup( BuildContext context,  {required String title, required String 
                   child: Container(
                       padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 15),
                       child: Text(Strings.okLabel, style: Styles.lead.copyWith(color: ColorPalette.primary))),
-                  onTap: (){
-                    bombaController.postBombasComb(context: context, num, title);
-                    //num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll(const BombaPage());
+                  onTap: ()async{
+                    if(num == "0") {
+                      await bombaController.putUpdateBombas();
+                      bombaController.postCloseBombasComb( num, title);
+                      bombaController.logout();
+                    }else {
+                      bombaController.postBombasComb(
+                           num, title);
+                      //num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll(const BombaPage());
+                    }
                   },
                 ),
               ],
