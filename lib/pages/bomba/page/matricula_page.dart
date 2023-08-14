@@ -42,11 +42,15 @@ class MatriculaPage extends StatelessWidget {
           ],
         ),
         body: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
           child: Column(
             children: [
-              Text(bomba,
-                  style: Styles.heading4.copyWith(color: ColorPalette.primary)),
+              Row(crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(bomba,
+                      style: Styles.heading5.copyWith(color: ColorPalette.primary)),
+                ],
+              ),
               const SizedBox(height: 8),
              // CustomTextFieldSearch(initialValue: Strings.searchHereLabel, textController: matriculaController.searchTextController),
              // const SizedBox(height: 16),

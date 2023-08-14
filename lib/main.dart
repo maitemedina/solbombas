@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:solbombas/constant/theme.dart';
 import 'package:solbombas/controller/abastecer_controller.dart';
@@ -9,7 +10,9 @@ import 'package:solbombas/pages/login/login_page.dart';
 
 void main() {
 WidgetsFlutterBinding.ensureInitialized();
-
+SystemChrome.setPreferredOrientations([
+  DeviceOrientation.portraitUp, // Apenas orientação retrato (vertical)
+]);
 
 Get.put(LoginController());
 Get.put(BombaController());

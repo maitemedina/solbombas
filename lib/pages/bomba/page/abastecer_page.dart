@@ -25,6 +25,9 @@ class AbastecerPage extends StatelessWidget {
         leading: GestureDetector(
           child: Icon(Icons.arrow_back, color: ColorPalette.primary),
           onTap: () {
+            abastecerController.qttController.clear();
+            matriculaController.motorista.clear();
+            matriculaController.condutor.value = '';
             Get.back();
           },
         ),
@@ -41,11 +44,11 @@ class AbastecerPage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Text(bomba, style: Styles.heading4.copyWith(color: ColorPalette.primary)),
+              Text(bomba, style: Styles.heading5.copyWith(color: ColorPalette.primary)),
               const SizedBox(height: 16),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -85,6 +88,8 @@ class AbastecerPage extends StatelessWidget {
                   ()=> ButtonUI(label: Strings.saveLabel, action: () async{
                   await abastecerController.putUpdateBombas(veiculo:veiculo, bombaText: bomba);
                   abastecerController.qttController.clear();
+                  matriculaController.motorista.clear();
+                  matriculaController.condutor.value = '';
                 }, forceExtended: true, disable: matriculaController.condutor.isEmpty?false:true),
               )
             ],

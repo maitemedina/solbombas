@@ -246,7 +246,12 @@ class BombaController extends GetxController {
     print(data);
 
     if (data != null) {
-      num == "1" ? Get.offAll((OpcionPage(bomba: title))) : Get.offAll( LoginPage());
+      if(num == "1"){
+        Get.offAll((OpcionPage(bomba: title)));
+      }else{
+        loginController.tagRead();
+        loginController.result.value="";
+        Get.offAll( LoginPage());}
     }
     else {
       return Get.snackbar("SolAtlantico", "Erro");
@@ -258,6 +263,8 @@ class BombaController extends GetxController {
     _isLoggedIn.value = false;
     _numBomba.value = "";
 
+    loginController.passTextController.clear();
+    loginController.userTextController.clear();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('isLoggedIn');
     prefs.remove('numBomba');

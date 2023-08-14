@@ -33,15 +33,15 @@ class OpcionPage extends StatelessWidget {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
         child: Container(
           height: Get.height,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(bomba, style: Styles.heading4.copyWith(color: ColorPalette.primary)),
-              const SizedBox(height: 16),
+              Text(bomba, style: Styles.heading5.copyWith(color: ColorPalette.primary)),
+              const SizedBox(height: 8),
               Expanded(
                 child: GestureDetector(
                   child: Container(

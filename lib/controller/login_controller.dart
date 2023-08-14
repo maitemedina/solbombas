@@ -21,10 +21,10 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _tagRead();
+    tagRead();
   }
 
-  void _tagRead( ) {
+  void tagRead( ) {
     NfcManager.instance.startSession(onDiscovered: (NfcTag tag) async {
       var num = tag.data["mifareclassic"]["identifier"]
           .map((e) => e.toRadixString(16).padLeft(2, '0'))
@@ -59,7 +59,7 @@ class LoginController extends GetxController {
     });
   }
 
-  Future login() async {
+  Future login({num}) async {
     //var num = '3222140871';
     var num = result.value;
 
@@ -90,7 +90,7 @@ class LoginController extends GetxController {
     } else {
       return Get.snackbar("SolAtlantico", "Utilizador não encontrado");
     }
-
+result.value='';
     print(user.first.username);
   }
 }
