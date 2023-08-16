@@ -4,14 +4,11 @@ import 'package:searchable_listview/searchable_listview.dart';
 import 'package:solbombas/constant/color.dart';
 import 'package:solbombas/constant/controller.dart';
 import 'package:solbombas/constant/images.dart';
-import 'package:solbombas/constant/strings.dart';
 import 'package:solbombas/constant/style.dart';
 import 'package:solbombas/controller/matricula_controller.dart';
 import 'package:solbombas/model/veiculosModel.dart';
-import 'package:solbombas/pages/bomba/page/abastecer_page.dart';
 import 'package:solbombas/pages/bomba/widgets/matricula_card.dart';
 import 'package:solbombas/widgets/custom_circular_progress.dart';
-import 'package:solbombas/widgets/custom_text_field_search.dart';
 
 class MatriculaPage extends StatelessWidget {
   final String bomba;
@@ -60,6 +57,7 @@ class MatriculaPage extends StatelessWidget {
                     ? const Center(child: CustomCircularProgress())
                     : Expanded(
                         child: SearchableList<VeiculosModel>(
+                          focusNode: controller.searchFieldFocusNode,
                           initialList: matriculaController.veiculosList,
                           builder: (VeiculosModel user) => Padding(
                             padding: const EdgeInsets.only(bottom: 8.0),

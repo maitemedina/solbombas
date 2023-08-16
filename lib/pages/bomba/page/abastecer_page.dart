@@ -6,7 +6,6 @@ import 'package:solbombas/constant/images.dart';
 import 'package:solbombas/constant/strings.dart';
 import 'package:solbombas/constant/style.dart';
 import 'package:solbombas/model/veiculosModel.dart';
-import 'package:solbombas/pages/bomba/page/opcion_page.dart';
 import 'package:solbombas/widgets/button_ui.dart';
 import 'package:solbombas/widgets/custom_text_field.dart';
 
@@ -28,6 +27,8 @@ class AbastecerPage extends StatelessWidget {
             abastecerController.qttController.clear();
             matriculaController.motorista.clear();
             matriculaController.condutor.value = '';
+            matriculaController.tipo.value = '';
+           // FocusScope.of(context).requestFocus(matriculaController.searchFieldFocusNode);
             Get.back();
           },
         ),
@@ -61,7 +62,9 @@ class AbastecerPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              Row(
+              matriculaController.tipo.toString() !='Autocarro'
+                  ?const SizedBox()
+              :Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
@@ -90,7 +93,8 @@ class AbastecerPage extends StatelessWidget {
                   abastecerController.qttController.clear();
                   matriculaController.motorista.clear();
                   matriculaController.condutor.value = '';
-                }, forceExtended: true, disable: matriculaController.condutor.isEmpty?false:true),
+                  matriculaController.tipo.value = '';
+                }, forceExtended: true, disable: matriculaController.tipo.toString() !='Autocarro' ? true : matriculaController.condutor.isEmpty ? false : true),
               )
             ],
           ),

@@ -36,6 +36,7 @@ class MatriculaCard extends StatelessWidget {
       ),
       onTap: () async{
         abastecerController.kmsController.text = veiculo.kmsatehoje!;
+        matriculaController.tipo.value = veiculo.tipo!;
          matriculaController.tagRead();
           Get.to(AbastecerPage(veiculo: veiculo,
               matricula: veiculo.matricula ??

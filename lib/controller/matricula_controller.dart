@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:solbombas/constant/controller.dart';
 import 'package:solbombas/model/veiculosModel.dart';
 import 'package:solbombas/service/Http/service_data.dart';
 
@@ -15,12 +14,16 @@ class MatriculaController extends GetxController {
 
   RxString result = "".obs;
   RxString condutor = "".obs;
+  RxString tipo = "".obs;
 
   final RxList<VeiculosModel> filteredVeiculoList = RxList<VeiculosModel>();
 
   final  searchTextController = TextEditingController();
 
   final RxString  searchText = ''.obs;
+
+  final FocusNode searchFieldFocusNode = FocusNode();
+
 
   // @override
   // void onInit() async{
@@ -62,6 +65,7 @@ class MatriculaController extends GetxController {
   @override
   void onClose() {
     searchTextController.dispose();
+    searchFieldFocusNode.dispose();
     super.onClose();
   }
 

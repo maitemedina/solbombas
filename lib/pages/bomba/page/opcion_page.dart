@@ -65,6 +65,7 @@ class OpcionPage extends StatelessWidget {
                   ),
                   onTap: ()async{
                     await matriculaController.getVeiculoList();
+                    FocusScope.of(context).requestFocus(matriculaController.searchFieldFocusNode);
                     Get.to(MatriculaPage(bomba:bomba));
                   },
                 ),
