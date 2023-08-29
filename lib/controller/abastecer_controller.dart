@@ -5,7 +5,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:solbombas/constant/controller.dart';
+import 'package:solbombas/helpers/login_result.dart';
 import 'package:solbombas/model/veiculosModel.dart';
 import 'package:solbombas/pages/bomba/page/opcion_page.dart';
 import 'package:solbombas/service/Http/service_data.dart';
@@ -15,18 +17,42 @@ class AbastecerController extends GetxController {
 
   final  qttController = TextEditingController();
   final  kmsController = TextEditingController();
+  RxDouble total = 0.0.obs;
+  final FocusNode textFocus = FocusNode();
 
 
-  Future putUpdateBombas({context, bombaText, required VeiculosModel veiculo}) async {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  @override
+  void onInit() {
+    super.onInit();
+    _loadTotalSum();
+  }
+
+  Future<LoginResult> putUpdateBombas({context, bombaText, required VeiculosModel veiculo}) async {
 //abastecimento do veiculos com combustivel
+
+    final FormState? form = formKey.currentState;
+    if (!form!.validate()) {
+      return LoginResult(false, errorMessage: "Campos Vazios");
+    }
+
+    var condutor = "";
+    var ncondutor = 0;
+    var ncartao = "";
 
     var iniciais = loginController.user.first.iniciais.toString();
     var user = loginController.user.first.usercode.toString();
     var bomba = bombaController.bomba.first.bomba.toString();
-    var condutor = matriculaController.motorista.first.cmdesc;
-    var ncondutor = matriculaController.motorista.first.cm;
-    var ncartao = matriculaController.motorista.first.uNcartao;
+
     int contint = converterParaInteiro(qttController.text);
+
+    if(matriculaController.motorista.isNotEmpty){
+       condutor = matriculaController.motorista.first.cmdesc.toString();
+       ncondutor = int.parse(matriculaController.motorista.first.cm.toString());
+       ncartao = matriculaController.motorista.first.uNcartao.toString();
+    }
+
 
     var now =  DateTime.now();
     var formatter =  DateFormat('yyyy-MM-dd');
@@ -73,12 +99,18 @@ class AbastecerController extends GetxController {
     print(data);
 
     if (data != null) {
+      addToTotal();
+      //abastecerController.qttController.clear();
+      matriculaController.motorista.clear();
+      matriculaController.condutor.value = '';
+      matriculaController.ncontadr.value = '';
       Get.offAll(OpcionPage(bomba: "Bomba $bomba"));
     }
     else {
-      return Get.snackbar("SolAtlantico", "Erro no abastecimento");
+      Get.snackbar("SolAtlantico", "Erro no abastecimento");
+      return LoginResult(false, errorMessage: "Erro no abastecimento");
     }
-
+    return LoginResult(true);
   }
 
   String getDataFormatada(String dataOriginal) {
@@ -128,4 +160,21 @@ class AbastecerController extends GetxController {
     }
   }
 
+  void _loadTotalSum() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    total.value = prefs.getDouble('totalGasolina') ?? 0.0;
+  }
+
+  void addToTotal() async {
+    double newValue = double.tryParse(qttController.text) ?? 0.0;
+    total.value += newValue;
+    print(qttController.text);
+    print("PRINTSHARED");
+    print(total.value);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setDouble('totalGasolina', total.value);
+
+    qttController.clear();
+  }
 }

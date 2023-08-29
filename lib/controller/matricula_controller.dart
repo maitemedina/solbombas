@@ -14,7 +14,8 @@ class MatriculaController extends GetxController {
 
   RxString result = "".obs;
   RxString condutor = "".obs;
-  RxString tipo = "".obs;
+  RxString driverLabel = "Condutor(a): ".obs;
+  RxString ncontadr = "".obs;
 
   final RxList<VeiculosModel> filteredVeiculoList = RxList<VeiculosModel>();
 
@@ -30,6 +31,12 @@ class MatriculaController extends GetxController {
   //   super.onInit();
   //   await getVeiculoList();
   //   filteredVeiculoList.addAll(veiculosList);
+  // }
+
+  // void filterSearchResults(String query) {
+  //   filteredVeiculoList.assignAll(
+  //     veiculosList.where((item) => item.matricula!.toLowerCase().contains(query.toLowerCase())).toList(),
+  //   );
   // }
 
   Future getVeiculoList() async {
@@ -50,8 +57,8 @@ class MatriculaController extends GetxController {
 
   }
 
-  void filterveiculos(String matricula) {
-    final query = searchTextController.text.toLowerCase();
+  void filterveiculos(String query) {
+    //final query = searchTextController.text.toLowerCase();
     if (query.isEmpty) {
       // Se a pesquisa estiver vazia, exibe todos os itens
       filteredVeiculoList.assignAll(veiculosList);

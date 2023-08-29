@@ -27,7 +27,7 @@ class AbastecerPage extends StatelessWidget {
             abastecerController.qttController.clear();
             matriculaController.motorista.clear();
             matriculaController.condutor.value = '';
-            matriculaController.tipo.value = '';
+            matriculaController.ncontadr.value = '';
            // FocusScope.of(context).requestFocus(matriculaController.searchFieldFocusNode);
             Get.back();
           },
@@ -62,39 +62,52 @@ class AbastecerPage extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 8),
-              matriculaController.tipo.toString() !='Autocarro'
-                  ?const SizedBox()
-              :Row(
+             Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  Text(
-                    Strings.driverLabel,
-                    style: Styles.textBold,
-                  ),
-                  Obx(()=> Text(matriculaController.condutor.toString(), style: Styles.textRegular)),
+                  Obx(()=> matriculaController.condutor.isNotEmpty ? Text(
+                      matriculaController.driverLabel.value,
+                    style: Styles.textBold)
+                          : const SizedBox()),
+                  Obx(()=> matriculaController.condutor.isNotEmpty ? Text(matriculaController.condutor.toString(), style: Styles.textRegular) : const SizedBox()),
                 ],
               ),
               const SizedBox(height: 16),
-              CustomTextField(
-                label: Strings.mileageLabel,
-                keyboardType: TextInputType.number,
-                textController: abastecerController.kmsController,
-              ),
-              const SizedBox(height: 16.0),
-              CustomTextField(
-                label: Strings.fuelLabel,
-                keyboardType: TextInputType.number,
-                textController: abastecerController.qttController,
+              Form(
+                key: abastecerController.formKey,
+                child: Column(
+                  children: [
+                    CustomTextField(
+                      label: Strings.mileageLabel,
+                      keyboardType: TextInputType.number,
+                      textController: abastecerController.kmsController,
+                      enable: matriculaController.ncontadr.toString() =='0' ? true: false,
+                      action: (){
+                        FocusScope.of(context).requestFocus(abastecerController.textFocus);
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    CustomTextField(
+                      focusNode: abastecerController.textFocus,
+                      label: Strings.fuelLabel,
+                      keyboardType: TextInputType.number,
+                      textController: abastecerController.qttController,
+                      requiredLabel: Strings.enterFuelLabel,
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: 16.0),
               Obx(
                   ()=> ButtonUI(label: Strings.saveLabel, action: () async{
-                  await abastecerController.putUpdateBombas(veiculo:veiculo, bombaText: bomba);
-                  abastecerController.qttController.clear();
-                  matriculaController.motorista.clear();
-                  matriculaController.condutor.value = '';
-                  matriculaController.tipo.value = '';
-                }, forceExtended: true, disable: matriculaController.tipo.toString() !='Autocarro' ? true : matriculaController.condutor.isEmpty ? false : true),
+                    if(int.parse(veiculo.kmsatehoje.toString()) <= int.parse(abastecerController.kmsController.text.toString()) ) {
+                      await abastecerController.putUpdateBombas(
+                          veiculo: veiculo, bombaText: bomba);
+
+                    }else{
+                      Get.snackbar("SolAtlantico", "O valor inserido tem que ser maior que o valor encontrado no autocarro!!");
+                    }
+                }, forceExtended: true, disable: matriculaController.ncontadr.toString() !='0' ? true : matriculaController.condutor.isEmpty ? false : true),
               )
             ],
           ),

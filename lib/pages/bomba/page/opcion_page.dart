@@ -65,7 +65,7 @@ class OpcionPage extends StatelessWidget {
                   ),
                   onTap: ()async{
                     await matriculaController.getVeiculoList();
-                    FocusScope.of(context).requestFocus(matriculaController.searchFieldFocusNode);
+                    matriculaController.searchFieldFocusNode.requestFocus();
                     Get.to(MatriculaPage(bomba:bomba));
                   },
                 ),
@@ -93,6 +93,7 @@ class OpcionPage extends StatelessWidget {
                     ),
                   ),
                   onTap: (){
+                    bombaController.addCombustivel();
                     bombaPopup(title: bomba, num: "0");
                   },
                 ),

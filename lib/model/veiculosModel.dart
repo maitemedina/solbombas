@@ -8,6 +8,7 @@ class VeiculosModel {
   String? ultimadata;
   String? ultimokm;
   String? nofrota;
+  String? uNcontadr;
 
   VeiculosModel(
       {this.matricula,
@@ -18,7 +19,8 @@ class VeiculosModel {
         this.tipo,
         this.ultimadata,
         this.ultimokm,
-        this.nofrota});
+        this.nofrota,
+        this.uNcontadr});
 
   VeiculosModel.fromJson(Map<String, dynamic> json) {
     matricula = json['matricula'];
@@ -30,6 +32,7 @@ class VeiculosModel {
     ultimadata = json['ultimadata'];
     ultimokm = json['ultimokm'];
     nofrota = json['nofrota'];
+    uNcontadr = json['u_ncontadr'];
   }
 
   Map<String, dynamic> toJson() {
@@ -43,6 +46,7 @@ class VeiculosModel {
     data['ultimadata'] = this.ultimadata;
     data['ultimokm'] = this.ultimokm;
     data['nofrota'] = this.nofrota;
+    data['u_ncontadr'] = this.uNcontadr;
     return data;
   }
 }

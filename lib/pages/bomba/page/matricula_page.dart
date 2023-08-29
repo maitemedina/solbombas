@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:searchable_listview/searchable_listview.dart';
 import 'package:solbombas/constant/color.dart';
 import 'package:solbombas/constant/controller.dart';
 import 'package:solbombas/constant/images.dart';
 import 'package:solbombas/constant/style.dart';
-import 'package:solbombas/controller/matricula_controller.dart';
-import 'package:solbombas/model/veiculosModel.dart';
 import 'package:solbombas/pages/bomba/widgets/matricula_card.dart';
-import 'package:solbombas/widgets/custom_circular_progress.dart';
 
 class MatriculaPage extends StatelessWidget {
   final String bomba;
@@ -51,55 +47,40 @@ class MatriculaPage extends StatelessWidget {
               const SizedBox(height: 8),
              // CustomTextFieldSearch(initialValue: Strings.searchHereLabel, textController: matriculaController.searchTextController),
              // const SizedBox(height: 16),
-
-              GetBuilder<MatriculaController>(builder: (controller) {
-                return controller.veiculosList.isEmpty
-                    ? const Center(child: CustomCircularProgress())
-                    : Expanded(
-                        child: SearchableList<VeiculosModel>(
-                          focusNode: controller.searchFieldFocusNode,
-                          initialList: matriculaController.veiculosList,
-                          builder: (VeiculosModel user) => Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: MatriculaCard(veiculo: user, bomba: bomba),
-                          ),
-                          filter: (value) => matriculaController.veiculosList.where((element) => element.matricula!.toLowerCase().contains(value),).toList(),
-                          emptyWidget:  const Text("Vazio"),
-                          inputDecoration: InputDecoration(
-                            labelText: "Pesquisar Matricula",
-                            fillColor: Colors.white,
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                color: Colors.blue,
-                                width: 1.0,
-                              ),
-                              borderRadius: BorderRadius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                        // ListView.builder(
-                        //   itemCount: controller.filteredVeiculoList.length,
-                        //   itemBuilder: (context, index) => GestureDetector(
-                        //     child: Padding(
-                        //       padding: const EdgeInsets.only(bottom: 8.0),
-                        //       child: MatriculaCard(veiculo: controller.filteredVeiculoList[index]),
-                        //     ),
-                        //     onTap: () {
-                        //       Get.to(AbastecerPage(
-                        //           matricula: controller
-                        //                   .filteredVeiculoList[index].matricula ??
-                        //               '',
-                        //           bomba: bomba));
-                        //     },
-                        //   ),
-                        //   // gridDelegate:
-                        //   //     const SliverGridDelegateWithFixedCrossAxisCount(
-                        //   //   crossAxisCount: 2,
-                        //   //   childAspectRatio: 3,
-                        //   // ),
-                        // ),
-                      );
-              }),
+              TextField(
+                onChanged: (value) {
+                  matriculaController.filterveiculos(value);
+                },
+                controller: matriculaController.searchTextController,
+                decoration:  InputDecoration(
+                    labelText: "Pesquisar",
+                    hintText: "Pesquisar...",
+                    prefixIcon: Icon(Icons.search, color: ColorPalette.primary),
+                    enabledBorder: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: ColorPalette.primary)),
+                    border: OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(Radius.circular(8.0)),
+                        borderSide: BorderSide(color: ColorPalette.secundary))
+                ),
+              ),
+              const SizedBox(height: 5),
+             // GetBuilder<MatriculaController>(builder: (controller) {
+              //  return controller.veiculosList.isEmpty
+               //     ? const Center(child: CustomCircularProgress())
+                     Expanded(
+                      child: Obx(()=>
+                        ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: matriculaController.filteredVeiculoList.length,
+                            itemBuilder: (context, index){
+                              return Padding(
+                                      padding: const EdgeInsets.only(bottom: 8.0),
+                                      child: MatriculaCard(veiculo: matriculaController.filteredVeiculoList[index], bomba: bomba));
+                            }),
+                      ),
+                    )
+             // }),
             ],
           ),
         ));

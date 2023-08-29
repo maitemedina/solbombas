@@ -9,13 +9,20 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? textController;
   final bool enable;
   final TextInputType keyboardType;
+  final VoidCallback? action;
+  final FocusNode? focusNode;
 
-  const CustomTextField(
+   const CustomTextField(
       {Key? key,
+        this.action,
+        this.focusNode,
         required this.label,
         this.textController,
         this.requiredLabel,
-        this.enable = true, this.initialValue, this.keyboardType = TextInputType.text})
+        this.enable = true,
+        this.initialValue,
+        this.keyboardType = TextInputType.text,
+        })
       : super(key: key);
 
   @override
@@ -26,6 +33,7 @@ class CustomTextField extends StatelessWidget {
         Text(label, style: Styles.textRegular),
         const SizedBox(height: 8,),
         TextFormField(
+          focusNode: focusNode,
           keyboardType: keyboardType,
           enabled: enable,
           //initialValue: initialValue,
@@ -41,6 +49,7 @@ class CustomTextField extends StatelessWidget {
           ),
           controller: textController,
           validator: (value) => value!.isEmpty ? requiredLabel : null,
+          onEditingComplete: action,
         ),
       ],
     );

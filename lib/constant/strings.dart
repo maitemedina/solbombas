@@ -6,6 +6,8 @@ class Strings {
   static String nameLabel = "Nome...";
   static String passwordLabel = "Palavra-passe...";
   static String enterPasswordLabel = "Insira a sua palavra-passe";
+  static String enterFuelLabel = "Insira a quantidade de combustivel";
+  static String enterUserLabel = "Insira o utilizador";
   static String enterLabel = "Entrar";
   static String searchHereLabel = "Pesquisa aqui...";
   static String employeeLabel = "Funcionario(a): ";

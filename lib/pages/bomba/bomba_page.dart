@@ -7,7 +7,6 @@ import 'package:solbombas/constant/images.dart';
 import 'package:solbombas/constant/strings.dart';
 import 'package:solbombas/constant/style.dart';
 import 'package:solbombas/controller/bomba_controller.dart';
-import 'package:solbombas/pages/bomba/widgets/bomba_popup.dart';
 import 'package:solbombas/widgets/custom_circular_progress.dart';
 
 import 'widgets/bomba_card.dart';
@@ -17,7 +16,6 @@ class BombaPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: ColorPalette.main,
@@ -45,48 +43,60 @@ class BombaPage extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            GetBuilder<BombaController>(
-               builder: (controller) {
-                 return controller.bombasList.isEmpty ? const Center(child: CustomCircularProgress()) :Expanded(
-                          child: EasyRefresh(
-                            header: ClassicalHeader(
-                              infoColor: ColorPalette.primary,
-                              refreshedText: "Atualizado!!",
-                              refreshingText: "Atualizando...",
-                              refreshReadyText: "Atualizar"
-                            ),
-                            onRefresh: ()async{
-                              await bombaController.getBombaList();
-                            },
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: controller.bombasList.length,
-                              itemBuilder: (context, index) {
-                                controller.abert.value = controller.bombasList[index].aberta.toString();
-                                return Padding(
+            GetBuilder<BombaController>(builder: (controller) {
+              return controller.bombasList.isEmpty
+                  ? const Center(child: CustomCircularProgress())
+                  : Expanded(
+                      child: EasyRefresh(
+                        header: ClassicalHeader(
+                            infoColor: ColorPalette.primary,
+                            refreshedText: "Atualizado!!",
+                            refreshingText: "Atualizando...",
+                            refreshReadyText: "Atualizar"),
+                        onRefresh: () async {
+                          await bombaController.getBombaList();
+                        },
+                        child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: controller.bombasList.length,
+                            itemBuilder: (context, index) {
+                              controller.abert.value = controller
+                                  .bombasList[index].aberta
+                                  .toString();
+                              return Padding(
                                 padding: const EdgeInsets.only(bottom: 8.0),
                                 child: GestureDetector(
                                   child: BombaCard(
                                     bomba: controller.bombasList[index],
                                   ),
-                                  onTap: () async{
+                                  onTap: () async {
                                     controller.abert.value = controller.bombasList[index].aberta.toString();
-                                    if (controller.bombasList[index].aberta == "0"|| controller.bombasList[index].username == loginController.user.first.usercode) {
-                                      await controller.putBombas(context: context,num: controller.bombasList[index].bomba.toString());
-                                      await controller.getBomba(nbomba: controller.bombasList[index].bomba.toString());
+                                    // bool hasOptionWithSameUsername = controller.bombasList.any((otherBomba) =>
+                                    //         otherBomba.username == loginController.user.first.usercode);
+
+                                    if (controller.hasOptionWithSameUsername()) {
+                                      if(controller.bombasList[index].username == loginController.user.first.usercode){
+                                        await controller.getBomba( nbomba: controller.bombasList[index].bomba.toString());
+                                      }else{
+                                        Get.snackbar("SolAtlantico",
+                                            "Ja tens uma bomba aberta");
+                                      }
+                                    } else if (controller.bombasList[index].aberta == "0") {
+                                      await controller.putBombas( context: context,
+                                          num: controller.bombasList[index].bomba.toString());
+                                      await controller.getBomba( nbomba: controller.bombasList[index].bomba.toString());
                                       //bombaPopup(title: "Bomba ${controller.bombasList[index].bomba}", num: "1", context);
-                                    }else{
-                                      Get.snackbar("SolAtlantico", "Essa bomba esta a ser utilizada por ${controller.bombasList[index].username}");
+                                    } else {
+                                      Get.snackbar("SolAtlantico",
+                                          "Essa bomba esta a ser utilizada por ${controller.bombasList[index].username}");
                                     }
                                   },
                                 ),
-                              );}
-                            ),
-                          ),
-                        );
-               }
-             ),
-
+                              );
+                            }),
+                      ),
+                    );
+            }),
           ],
         ),
       ),

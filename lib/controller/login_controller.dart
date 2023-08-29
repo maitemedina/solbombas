@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nfc_manager/nfc_manager.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:solbombas/constant/api_path.dart';
 import 'package:solbombas/constant/controller.dart';
+import 'package:solbombas/helpers/login_result.dart';
 import 'package:solbombas/model/userModel.dart';
-import 'package:solbombas/pages/bomba/bomba_page.dart';
-import 'package:solbombas/pages/bomba/page/opcion_page.dart';
 import 'package:solbombas/service/Http/service_data.dart';
 
 class LoginController extends GetxController {
@@ -18,6 +15,8 @@ class LoginController extends GetxController {
   final userTextController = TextEditingController();
   final passTextController = TextEditingController();
 
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   @override
   void onInit() {
     super.onInit();
@@ -59,12 +58,17 @@ class LoginController extends GetxController {
     });
   }
 
-  Future login({num}) async {
+  Future<LoginResult> login() async {
     //var num = '3222140871';
     var num = result.value;
 
-    if (num.isNull || num.isEmpty) {
+    if (num == null || num.isEmpty) {
       num = "0";
+
+      final FormState? form = formKey.currentState;
+      if (!form!.validate()) {
+        return LoginResult(false, errorMessage: "Campos Vazios");
+      }
     }
     print("tes: " + userTextController.text.trim());
     var name = userTextController.text.trim();
@@ -88,9 +92,11 @@ class LoginController extends GetxController {
       bombaController.checkLoginStatus();
 
     } else {
-      return Get.snackbar("SolAtlantico", "Utilizador não encontrado");
+       Get.snackbar("SolAtlantico", "Utilizador não encontrado");
+       return LoginResult(false, errorMessage: "Utilizador não encontrado");
     }
 result.value='';
     print(user.first.username);
+    return LoginResult(true);
   }
 }
