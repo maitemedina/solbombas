@@ -283,7 +283,8 @@ class BombaController extends GetxController {
       }else{
         loginController.tagRead();
         loginController.result.value="";
-        Get.offAll( LoginPage());}
+        logout();
+        }
     }
     else {
       return Get.snackbar("SolAtlantico", "Erro");
@@ -304,6 +305,7 @@ class BombaController extends GetxController {
     prefs.remove('totalGasolina');
     prefs.remove('valorBomba');
     prefs.remove('username');
+    Get.offAll( LoginPage());
   }
 
   addCombustivel()async{

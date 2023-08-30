@@ -54,7 +54,6 @@ void bombaPopup( {required String title, required String num}){
                       if (num == "0") {
                         await bombaController.putUpdateBombas();
                         bombaController.postCloseBombasComb(num, title);
-                        bombaController.logout();
                       } else {
                         bombaController.postBombasComb(
                             num, title);

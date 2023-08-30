@@ -20,6 +20,9 @@ class MatriculaPage extends StatelessWidget {
             child: Icon(Icons.arrow_back, color: ColorPalette.primary),
             onTap: () {
               Get.back();
+              matriculaController.searchTextController.clear();
+              matriculaController.filteredVeiculoList.clear();
+              matriculaController.filteredVeiculoList.addAll(matriculaController.veiculosList);
             },
           ),
           title: Image.asset(Images.logo, width: 80),

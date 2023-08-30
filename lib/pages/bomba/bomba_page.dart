@@ -23,7 +23,9 @@ class BombaPage extends StatelessWidget {
         leadingWidth: 100,
         actions: [
           IconButton(
-              onPressed: () {},
+              onPressed: () {
+                bombaController.logout();
+              },
               icon: Icon(Icons.login_outlined, color: ColorPalette.primary))
         ],
       ),

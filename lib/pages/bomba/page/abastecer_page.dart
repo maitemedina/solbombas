@@ -28,6 +28,10 @@ class AbastecerPage extends StatelessWidget {
             matriculaController.motorista.clear();
             matriculaController.condutor.value = '';
             matriculaController.ncontadr.value = '';
+            matriculaController.searchTextController.clear();
+            matriculaController.filteredVeiculoList.clear();
+            matriculaController.filteredVeiculoList.addAll(matriculaController.veiculosList);
+
            // FocusScope.of(context).requestFocus(matriculaController.searchFieldFocusNode);
             Get.back();
           },
@@ -77,7 +81,9 @@ class AbastecerPage extends StatelessWidget {
                 key: abastecerController.formKey,
                 child: Column(
                   children: [
-                    CustomTextField(
+                    matriculaController.ncontadr.toString() !='0'
+                        ?const SizedBox()
+                        :CustomTextField(
                       label: Strings.mileageLabel,
                       keyboardType: TextInputType.number,
                       textController: abastecerController.kmsController,
@@ -93,6 +99,19 @@ class AbastecerPage extends StatelessWidget {
                       keyboardType: TextInputType.number,
                       textController: abastecerController.qttController,
                       requiredLabel: Strings.enterFuelLabel,
+                      action: () async{
+                        if(matriculaController.ncontadr.toString() =='0' && matriculaController.condutor.isEmpty){
+                          Get.snackbar("SolAtlantico", "Passa o cartão de motorista!!");
+                        }else{
+                          if(int.parse(veiculo.kmsatehoje.toString()) <= int.parse(abastecerController.kmsController.text.toString()) ) {
+                            await abastecerController.putUpdateBombas(
+                                veiculo: veiculo, bombaText: bomba);
+
+                          }else{
+                            Get.snackbar("SolAtlantico", "O valor inserido tem que ser maior que o valor encontrado no autocarro!!");
+                          }
+                        };
+                      }
                     ),
                   ],
                 ),

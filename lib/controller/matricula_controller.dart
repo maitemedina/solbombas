@@ -23,7 +23,7 @@ class MatriculaController extends GetxController {
 
   final RxString  searchText = ''.obs;
 
-  final FocusNode searchFieldFocusNode = FocusNode();
+  //final FocusNode searchFieldFocusNode = FocusNode();
 
 
   // @override
@@ -72,7 +72,7 @@ class MatriculaController extends GetxController {
   @override
   void onClose() {
     searchTextController.dispose();
-    searchFieldFocusNode.dispose();
+    //searchFieldFocusNode.dispose();
     super.onClose();
   }
 
